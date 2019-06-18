@@ -33,6 +33,7 @@ app.get("/api/hello", function (req, res) {
 app.post("/api/shorturl/new",function(req,res)
         {
     var payload = req.body;
+  console.log(payload);
   dns.lookup(payload.url,function(err,data){
      res.send(data);
   });
