@@ -33,10 +33,12 @@ app.get("/api/hello", function (req, res) {
 app.post("/api/shorturl/new",function(req,res)
         {
     var payload = req.body;
-  console.log(payload);
-  dns.lookup(payload.url,function(err,data){
-     res.send(data);
-  });
+  //console.log(payload);
+  let url = payload.url.replace(/(^\w+:|^)\/\//, '');
+
+  dns.lookup(payload.url, (err, address, family) => {
+  console.log('address: %j family: IPv%s', address, family);
+});
 });
 app.listen(port, function () {
   console.log('Node.js listening ...');
