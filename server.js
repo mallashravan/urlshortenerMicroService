@@ -35,11 +35,19 @@ app.post("/api/shorturl/new",function(req,res)
     var payload = req.body;
   //console.log(payload);
   let url = payload.url.replace(/(^\w+:|^)\/\//, '');
-
+  
   dns.lookup(payload.url, (err, address, family) => {
-  console.log('address: %j family: IPv%s', address, family);
+    if(err)
+      {
+        res.json({"error":"invalid URL"});
+      }
+    else
+      {
+        
+      }
 });
 });
 app.listen(port, function () {
   console.log('Node.js listening ...');
 });
+
