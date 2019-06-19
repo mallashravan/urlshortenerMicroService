@@ -77,12 +77,12 @@ app.post("/api/shorturl/new",function(req,res)
   dns.lookup(url, (err, address, family) => {
     if(err)
       {
+        console.log("invalid url");
         res.json({"error":"invalid URL"});
       }
     else
       {
-        console.log(req.body);
-         Url.findOne(req.body,function (err, data) {
+         Url.findOne({original_url:original_url},function (err, data) {
     if(err)
       {
          var urlObj = new Url({original_url:original_url});
