@@ -19,13 +19,28 @@ app.use(cors());
 // you should mount the body-parser here
 app.use(bodyParser.urlencoded());
 app.use('/public', express.static(process.cwd() + '/public'));
-
 var Schema = mongoose.Schema;
+
+var CounterSchema = Schema({
+    _id: {type: String, required: true},
+    seq: { type: Number, default: 0 }
+});
+var counter = mongoose.model('counter', CounterSchema);
+
   var UrlSchema = new Schema({
      original_url: String,
      short_url: Number 
   });
-  var Url = mongoose.model('Url', UrlSchema);
+UrlSchema.pre('save', function(next) {
+    var doc = this;
+    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
+        if(error)
+            return next(error);
+        doc.testvalue = counter.seq;
+        next();
+    });
+});
+var Url = mongoose.model('Url', UrlSchema);
 
 app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
@@ -42,7 +57,7 @@ app.post("/api/shorturl/new",function(req,res)
   //console.log(payload);
   let url = payload.url.replace(/(^\w+:|^)\/\//, '');
   
-  dns.lookup(payload.url, (err, address, family) => {
+  dns.lookup(url, (err, address, family) => {
     if(err)
       {
         res.json({"error":"invalid URL"});
@@ -51,7 +66,7 @@ app.post("/api/shorturl/new",function(req,res)
       {
  var urlObj = new Url({"original_url":"www.google.com","short_url":1});
   urlObj.save(function(err,data)
-              {
+{
     console.log('saved');
     res.json(data);
   });
