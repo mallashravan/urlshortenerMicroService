@@ -54,6 +54,17 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/shorturl/:shorturl",function(req,res)
+       {
+  var short_url = req.params;
+  Url.findOne(req.params,function (err, data) {
+    if(err)
+      {
+        res.json({"error":"invalid URL"});
+      }
+      res.redirect(data.origin)
+  });
+});
 app.post("/api/shorturl/new",function(req,res)
         {
     var payload = req.body;
@@ -68,12 +79,14 @@ app.post("/api/shorturl/new",function(req,res)
     else
       {
         console.log(req.body);
- var urlObj = new Url({url:req.body.url});
+ var urlObj = new Url({original_url:req.body.url});
+        console.log('urlObj=' + urlObj);
   urlObj.save(function(err,data)
 {
     console.log('saved');
-    console.log(data); 
-    res.json({original_url:urlObj.url,short_url:data.short_url});
+    console.log(data);
+    var result = {original_url : data.original_url,short_url:data.short_url};
+    res.json(result);
   });
       }
 });
