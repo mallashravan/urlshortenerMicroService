@@ -26,17 +26,20 @@ var CounterSchema = Schema({
     seq: { type: Number, default: 0 }
 });
 var counter = mongoose.model('counter', CounterSchema);
-
+let counterObj = new counter({_id:"urlId",seq:0});
+counterObj.save(function(err,data){
+  console.log('counter initialised');
+});
   var UrlSchema = new Schema({
      original_url: String,
      short_url: Number 
   });
 UrlSchema.pre('save', function(next) {
     var doc = this;
-    counter.findByIdAndUpdate({_id: 'entityId'}, {$inc: { seq: 1} }, function(error, counter)   {
+    counter.findByIdAndUpdate({_id: 'urlId'}, {$inc: { seq: 1} }, function(error, counter)   {
         if(error)
             return next(error);
-        doc.testvalue = counter.seq;
+        doc.short_url = counter.seq;
         next();
     });
 });
@@ -54,7 +57,7 @@ app.get("/api/hello", function (req, res) {
 app.post("/api/shorturl/new",function(req,res)
         {
     var payload = req.body;
-  //console.log(payload);
+  console.log(payload);
   let url = payload.url.replace(/(^\w+:|^)\/\//, '');
   
   dns.lookup(url, (err, address, family) => {
@@ -64,11 +67,13 @@ app.post("/api/shorturl/new",function(req,res)
       }
     else
       {
- var urlObj = new Url({"original_url":"www.google.com","short_url":1});
+        console.log(req.body);
+ var urlObj = new Url({url:req.body.url});
   urlObj.save(function(err,data)
 {
     console.log('saved');
-    res.json(data);
+    console.log(data); 
+    res.json({original_url:urlObj.url,short_url:data.short_url});
   });
       }
 });
