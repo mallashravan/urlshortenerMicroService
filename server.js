@@ -25,7 +25,7 @@ var Schema = mongoose.Schema;
      original_url: String,
      short_url: Number 
   });
-  var Url = mongoose.model('Person', PersonSchema);
+  var Url = mongoose.model('Url', urlSchema);
 
 app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
