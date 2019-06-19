@@ -54,20 +54,23 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/shorturl/:shorturl",function(req,res)
+app.get("/api/shorturl/:short_url",function(req,res)
        {
+  console.log(req.params);
   var short_url = req.params;
   Url.findOne(req.params,function (err, data) {
     if(err)
       {
         res.json({"error":"invalid URL"});
       }
-      res.redirect(data.origin)
+    console.log(data.original_url);
+      res.redirect(data.original_url);
   });
 });
 app.post("/api/shorturl/new",function(req,res)
         {
     var payload = req.body;
+    var original_url = payload.url;
   console.log(payload);
   let url = payload.url.replace(/(^\w+:|^)\/\//, '');
   
@@ -79,8 +82,11 @@ app.post("/api/shorturl/new",function(req,res)
     else
       {
         console.log(req.body);
- var urlObj = new Url({original_url:req.body.url});
-        console.log('urlObj=' + urlObj);
+         Url.findOne(req.body,function (err, data) {
+    if(err)
+      {
+         var urlObj = new Url({original_url:original_url});
+  console.log('urlObj=' + urlObj);
   urlObj.save(function(err,data)
 {
     console.log('saved');
@@ -88,6 +94,16 @@ app.post("/api/shorturl/new",function(req,res)
     var result = {original_url : data.original_url,short_url:data.short_url};
     res.json(result);
   });
+      }
+      else
+        {
+             var result = {original_url : data.original_url,short_url:data.short_url};
+    res.json(result);
+
+        }
+    
+  });
+
       }
 });
 });
