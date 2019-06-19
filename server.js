@@ -18,8 +18,14 @@ app.use(cors());
 /** this project needs to parse POST bodies **/
 // you should mount the body-parser here
 app.use(bodyParser.urlencoded());
-
 app.use('/public', express.static(process.cwd() + '/public'));
+
+var Schema = mongoose.Schema;
+  var urlSchema = new Schema({
+     original_url: String,
+     short_url: Number 
+  });
+  var Url = mongoose.model('Person', PersonSchema);
 
 app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
