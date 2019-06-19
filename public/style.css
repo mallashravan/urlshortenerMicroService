@@ -1,4 +1,4 @@
-/****** Main Styling ******/
+/* ***** Main Styling *****
 
 body {
 	font-family: 'Roboto', sans-serif;
@@ -53,8 +53,8 @@ a {
 }
 
 form {
-  border: solid 1px black;
-  border-radius: 5px;
+   border: solid 1px black;
+  border-radius: 5px; 
   margin: 10px auto;
   padding: 20px;
   max-width: 600px;
@@ -71,4 +71,4 @@ input {
 input[type=text] {
   width: 220px;
   text-align: center;
-}
+} */
